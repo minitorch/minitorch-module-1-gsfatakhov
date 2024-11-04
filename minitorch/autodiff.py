@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, List, Tuple
+from typing import Any, Iterable, Tuple
 
 from typing_extensions import Protocol
 
@@ -22,8 +22,17 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
     Returns:
         An approximation of $f'_i(x_0, \ldots, x_{n-1})$
     """
-    # TODO: Implement for Task 1.1.
-    raise NotImplementedError("Need to implement for Task 1.1")
+    # Implement for Task 1.1.
+    vals_plus_eps = list(vals)
+    vals_plus_eps[arg] += epsilon
+
+    vals_minus_eps = list(vals)
+    vals_minus_eps[arg] -= epsilon
+
+    f_plus_eps = f(*vals_plus_eps)
+    f_minus_eps = f(*vals_minus_eps)
+
+    return (f_plus_eps - f_minus_eps) / (2 * epsilon)
 
 
 variable_count = 1
@@ -61,8 +70,21 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    # Implement for Task 1.4.
+
+    visited = set()
+    stack = []
+
+    def dfs(v):
+        if v.unique_id in visited:
+            return
+        visited.add(v.unique_id)
+        for p in v.parents:
+            dfs(p)
+        stack.append(v)
+
+    dfs(variable)
+    return stack
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -76,8 +98,23 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
 
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError("Need to implement for Task 1.4")
+    # Implement for Task 1.4.
+
+    stack = topological_sort(variable)
+
+    variable.derivative = deriv
+
+    for scalar in reversed(stack):
+        if scalar.is_leaf():
+            continue
+
+        for parent, d in scalar.chain_rule(scalar.derivative):
+            if parent.is_leaf():
+                parent.accumulate_derivative(d)
+            else:
+                if parent.derivative is None:
+                    parent.derivative = 0.0
+                parent.derivative += d
 
 
 @dataclass

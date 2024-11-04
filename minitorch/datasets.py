@@ -5,6 +5,7 @@ from typing import List, Tuple
 
 
 def make_pts(N: int) -> List[Tuple[float, float]]:
+    """Generate N random points in [0, 1] square."""
     X = []
     for i in range(N):
         x_1 = random.random()
@@ -21,6 +22,7 @@ class Graph:
 
 
 def simple(N: int) -> Graph:
+    """Dataset which can be split by vertical line."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -30,6 +32,7 @@ def simple(N: int) -> Graph:
 
 
 def diag(N: int) -> Graph:
+    """Dataset which can be split by diagonal line."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -39,6 +42,7 @@ def diag(N: int) -> Graph:
 
 
 def split(N: int) -> Graph:
+    """Dataset which can be split by two lines."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -48,6 +52,7 @@ def split(N: int) -> Graph:
 
 
 def xor(N: int) -> Graph:
+    """Dataset which can't be split by a single line."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -57,6 +62,7 @@ def xor(N: int) -> Graph:
 
 
 def circle(N: int) -> Graph:
+    """Dataset which can be split by a circle."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -67,6 +73,8 @@ def circle(N: int) -> Graph:
 
 
 def spiral(N: int) -> Graph:
+    """Dataset which can be split by a spiral."""
+
     def x(t: float) -> float:
         return t * math.cos(t) / 20.0
 
